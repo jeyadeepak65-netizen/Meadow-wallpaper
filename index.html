@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Living Meadow – an interactive live wallpaper</title>
+<meta name="description" content="An interactive 3D meadow that follows your local time and weather: sunrise birdsong, a pond with jumping fish, fireflies, bats and owls at night.">
+<meta property="og:title" content="Living Meadow – an interactive live wallpaper">
+<meta property="og:description" content="A 3D meadow that follows your local time and weather. Hover the grass, click the flowers and the pond.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0b1424">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+<div id="vignette"></div>
+<div id="intro">Move over the grass · click the flowers and the pond · click anywhere to start the sound · press H or touch ⚙ for controls</div>
+<div id="loading">Growing the meadow…</div>
+
+<div id="panel" class="hidden">
+  <div class="row">
+    <div class="place" id="placeBtn"><span id="place">Locating…</span><small>▾</small></div>
+    <button class="iconbtn" id="muteBtn" title="Sound">🔊</button>
+  </div>
+  <div class="row cond">
+    <div><span class="i" id="condIcon">☀️</span><span id="cond">–</span></div>
+    <button class="iconbtn" id="refresh" title="Refresh weather">↻</button>
+  </div>
+
+  <div class="row fcHead"><span class="lbl">7-day forecast</span><button class="iconbtn" id="fcBtn" title="Show / hide the forecast" aria-expanded="true">▾</button></div>
+  <div id="forecast"><div class="fcmsg">Loading forecast…</div></div>
+  <div id="fcHint">Tap a day to preview how it will look</div>
+
+  <div id="moonInfo" style="margin-top:2px;font-size:12px;opacity:.72"></div>
+  <div class="dialWrap">
+    <svg id="dial" viewBox="0 0 300 160"></svg>
+    <div class="dialText"><div class="t" id="dialTime">12:00 PM</div><div class="l" id="dialLabel">Day</div></div>
+  </div>
+
+  <div class="row opt" style="margin-top:6px"><span class="lbl">Weather</span>
+    <div class="seg" id="wSeg">
+      <button data-w="auto" class="on">Auto</button><button data-w="clear">☀︎</button><button data-w="cloud">☁︎</button><button data-w="rain">🌧</button>
+    </div>
+  </div>
+  <div class="row opt"><span class="lbl">Animation &amp; interaction</span><label class="sw"><input type="checkbox" id="tAnim" checked><span></span></label></div>
+  <div class="row opt"><span class="lbl">React to my cursor</span><label class="sw"><input type="checkbox" id="tReact" checked><span></span></label></div>
+  <div class="row opt"><span class="lbl">Ambient sound</span><span style="display:flex;align-items:center"><input type="range" id="vol" min="0" max="1" step="0.05" value="0.4"><label class="sw"><input type="checkbox" id="tSound" checked><span></span></label></span></div>
+
+  <div class="btns">
+    <button id="liveBtn" class="on">Live time</button>
+    <button id="fsBtn">Fullscreen</button>
+    <button id="hideBtn">Hide panel</button>
+  </div>
+  <div style="margin-top:12px;font-size:11px;opacity:.55;text-align:center"><span id="credit">Weather by Open-Meteo</span> · 3D by Three.js</div>
+</div>
+<button id="showBtn" title="Settings, time & weather (or press H)" aria-label="Open settings">⚙</button>
+
+<script src="js/loader.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, "SF Pro Text", system-ui, sans-serif; color: #fff; }
+canvas { display: block; }
+#vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.28) 100%); }
+
+#panel {
+  position: fixed; top: 22px; right: 22px; width: 300px; padding: 18px 18px 16px; border-radius: 20px;
+  background: rgba(28, 40, 66, .52); backdrop-filter: blur(22px) saturate(1.3); -webkit-backdrop-filter: blur(22px) saturate(1.3);
+  border: 1px solid rgba(255,255,255,.14); box-shadow: 0 18px 50px rgba(0,0,0,.35);
+  user-select: none; transition: opacity .25s, transform .25s;
+}
+#panel.hidden { opacity: 0; pointer-events: none; transform: translateY(-8px); }
+.row { display: flex; align-items: center; justify-content: space-between; }
+.place { font-size: 17px; font-weight: 600; cursor: pointer; display: flex; gap: 6px; align-items: center; }
+.place span { max-width: 232px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.place small { opacity: .6; font-size: 11px; }
+.iconbtn { background: none; border: 0; color: #fff; opacity: .75; font-size: 16px; cursor: pointer; padding: 2px 4px; }
+.iconbtn:hover { opacity: 1; }
+.cond { margin-top: 12px; font-size: 14px; opacity: .95; }
+.cond span.i { margin-right: 6px; }
+
+.dialWrap { position: relative; margin: 6px 0 4px; }
+#dial { width: 100%; display: block; cursor: grab; touch-action: none; }
+#dial:active { cursor: grabbing; }
+.dialText { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; pointer-events: none; }
+.dialText .t { font-size: 22px; font-weight: 600; }
+.dialText .l { font-size: 12px; opacity: .75; margin-top: 2px; }
+
+.seg { display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: rgba(255,255,255,.14); }
+.seg button { border: 0; background: transparent; color: #fff; border-radius: 999px; padding: 5px 10px; font-size: 13px; cursor: pointer; min-width: 34px; }
+.seg button.on { background: rgba(255,255,255,.3); }
+.opt { margin-top: 13px; font-size: 14px; }
+.opt .lbl { opacity: .95; }
+
+.sw { position: relative; width: 46px; height: 27px; display: inline-block; flex: none; }
+.sw input { display: none; }
+.sw span { position: absolute; inset: 0; border-radius: 999px; background: rgba(255,255,255,.28); transition: .2s; cursor: pointer; }
+.sw span::after { content: ""; position: absolute; width: 23px; height: 23px; top: 2px; left: 2px; border-radius: 50%; background: #fff; transition: .2s; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+.sw input:checked + span { background: #3b82f6; }
+.sw input:checked + span::after { transform: translateX(19px); }
+#vol { width: 70px; margin: 0 10px; accent-color: #fff; }
+
+.btns { display: flex; gap: 8px; margin-top: 16px; }
+.btns button { flex: 1; border: 0; border-radius: 12px; padding: 10px 6px; background: rgba(255,255,255,.16); color: #fff; font-size: 13px; font-weight: 500; cursor: pointer; }
+.btns button:hover { background: rgba(255,255,255,.26); }
+.btns button.on { background: #3b82f6; }
+
+#showBtn { position: fixed; top: 14px; right: 14px; width: 28px; height: 28px; padding: 0; border-radius: 50%; border: 0; background: rgba(255,255,255,.16);
+  color: #fff; font-size: 14px; line-height: 28px; text-align: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .25s, background .25s; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+#showBtn.vis { opacity: .4; pointer-events: auto; } #showBtn.vis:hover { opacity: 1; background: rgba(255,255,255,.3); }
+#win { position: fixed; inset: 0; pointer-events: none; overflow: hidden; transition: filter .6s; }
+#win .in { position: absolute; inset: 14px 14px 30px 14px; border-radius: 10px;
+  box-shadow: 0 0 0 200vmax #e9e5dc, inset 0 0 0 2px rgba(0,0,0,.16), inset 0 0 46px rgba(0,0,0,.30); }
+#win .glass { position: absolute; inset: 14px 14px 30px 14px; border-radius: 10px;
+  background: linear-gradient(115deg, rgba(255,255,255,.07) 0 20%, transparent 20% 28%, rgba(255,255,255,.04) 28% 31%, transparent 31%); }
+#win .sill { position: absolute; left: 0; right: 0; bottom: 0; height: 30px; background: linear-gradient(#f3efe7, #d9d3c7); box-shadow: 0 -2px 10px rgba(0,0,0,.25); }
+#intro { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); padding: 10px 18px; border-radius: 999px; font-size: 13px; color: #fff;
+  background: rgba(20,30,50,.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); pointer-events: none; transition: opacity 1s; text-align: center; max-width: 92vw; }
+#loading { position: fixed; inset: 0; background: #0b1424; display: flex; align-items: center; justify-content: center; font-size: 15px; opacity: .95; transition: opacity .8s; pointer-events: none; }
+
+/* 7-day forecast */
+.fcHead { margin-top: 12px; font-size: 14px; }
+#forecast { display: flex; gap: 3px; margin-top: 6px; }
+#forecast.collapsed, #fcHint.collapsed { display: none; }
+#fcBtn { transition: transform .2s; }
+#fcBtn.shut { transform: rotate(-90deg); }
+.fcDay { flex: 1; min-width: 0; border: 0; background: rgba(255,255,255,.1); color: #fff; border-radius: 10px; padding: 6px 0 5px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; transition: background .2s; }
+.fcDay:hover { background: rgba(255,255,255,.22); }
+.fcDay.on { background: #3b82f6; }
+.fcDay .ic { font-size: 16px; line-height: 1.15; }
+.fcDay b { font-size: 12px; font-weight: 600; }
+.fcDay i { font-style: normal; opacity: .65; font-size: 11px; }
+.fcmsg { font-size: 12px; opacity: .7; padding: 8px 0; text-align: center; width: 100%; }
+#fcHint { font-size: 11px; opacity: .6; text-align: center; margin-top: 5px; }
+.fcDay .mn { font-size: 11px; line-height: 1.2; margin-top: 1px; opacity: .9; }
